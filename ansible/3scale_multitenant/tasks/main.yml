@@ -1,0 +1,34 @@
+---
+- name: "Ensure the following directory exists: {{new_app_output_dir}}"
+  file:
+    path: "{{new_app_output_dir}}"
+    state: directory
+    mode: 0755
+
+- name: Running Pre Workload Tasks
+  import_tasks: ./pre_workload.yml
+  become: "{{ become_override | bool }}"
+  when: ACTION == "create" or ACTION == "provision" or ACTION == "apimanager"
+
+- name: Running Workload Tasks
+  import_tasks: ./workload.yml
+  become: "{{ become_override | bool }}"
+  when: ACTION == "create" or ACTION == "provision" or ACTION == "apimanager"
+
+- name: Running Tenant Provision Tasks
+  block:
+    - set_fact:
+        create_or_delete_tenants: create
+    - import_tasks: ./tenant_mgmt.yml
+      become: "{{ become_override | bool }}"
+  when: ACTION == ACTION == "create" or ACTION == "provision" or ACTION == "tenant_mgmt"
+
+- name: Running Workload removal Tasks
+  block:
+    - import_tasks: ./remove_workload.yml
+      become: "{{ become_override | bool }}"
+    - set_fact:
+        create_or_delete_tenants: delete
+    - import_tasks: ./tenant_mgmt.yml
+      become: "{{ become_override | bool }}"
+  when: ACTION == "destroy" or ACTION == "remove"
