@@ -8,7 +8,7 @@ become_override: false
 #  - OPENTLC-PROJECT-PROVISIONERS
 
 ocp_username: user1
-ocp_project: fuse-ignite
+ocp_project: fuse-online
 openshift_oauth_proxy_imagestream: oauth-proxy-openshift4
 openshift_oauth_proxy_image: quay.io/openshift/origin-oauth-proxy:v4.0.0
 openshift_oauth_proxy_image_tag: latest
