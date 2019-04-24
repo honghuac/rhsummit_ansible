@@ -29,42 +29,42 @@
     https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/72-1.1.GA/templates/${template}
      done
 
-- name: Create Fuse on OpenShift imagestream in OCP cluster
-  shell: |
-    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-image-streams.json
+#- name: Create Fuse on OpenShift imagestream in OCP cluster
+#  shell: |
+#    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-image-streams.json
 
-- name: Create Fuse on OpenShift quickstart templates in OCP cluster
-  shell: |
-    for template in eap-camel-amq-template.json \
-     eap-camel-cdi-template.json \
-     eap-camel-cxf-jaxrs-template.json \
-     eap-camel-cxf-jaxws-template.json \
-     eap-camel-jpa-template.json \
-     karaf-camel-amq-template.json \
-     karaf-camel-log-template.json \
-     karaf-camel-rest-sql-template.json \
-     karaf-cxf-rest-template.json \
-     spring-boot-camel-amq-template.json \
-     spring-boot-camel-config-template.json \
-     spring-boot-camel-drools-template.json \
-     spring-boot-camel-infinispan-template.json \
-     spring-boot-camel-teiid-template.json \
-     spring-boot-camel-template.json \
-     spring-boot-camel-xml-template.json \
-     spring-boot-cxf-jaxrs-template.json \
-     spring-boot-cxf-jaxws-template.json ;
-       do
-       oc replace -n openshift -f \
-       https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/quickstarts/${template}
-       done
+#- name: Create Fuse on OpenShift quickstart templates in OCP cluster
+#  shell: |
+#    for template in eap-camel-amq-template.json \
+#     eap-camel-cdi-template.json \
+#     eap-camel-cxf-jaxrs-template.json \
+#     eap-camel-cxf-jaxws-template.json \
+#     eap-camel-jpa-template.json \
+#     karaf-camel-amq-template.json \
+#     karaf-camel-log-template.json \
+#    karaf-camel-rest-sql-template.json \
+#     karaf-cxf-rest-template.json \
+#     spring-boot-camel-amq-template.json \
+#     spring-boot-camel-config-template.json \
+#     spring-boot-camel-drools-template.json \
+#     spring-boot-camel-infinispan-template.json \
+#     spring-boot-camel-teiid-template.json \
+#     spring-boot-camel-template.json \
+#     spring-boot-camel-xml-template.json \
+#     spring-boot-cxf-jaxrs-template.json \
+#     spring-boot-cxf-jaxws-template.json ;
+#       do
+#       oc replace -n openshift -f \
+#       https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/quickstarts/${template}
+#       done
 
-- name: Create Fuse on OpenShift Hawtio Cluster template in OCP cluster
-  shell: |
-    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-console-cluster-template.json
+#- name: Create Fuse on OpenShift Hawtio Cluster template in OCP cluster
+#  shell: |
+#    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-console-cluster-template.json
 
-- name: Create Fuse on OpenShift Hawtio Namespace templates in OCP cluster
-  shell: |
-    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-console-namespace-template.json
+#- name: Create Fuse on OpenShift Hawtio Namespace templates in OCP cluster
+#  shell: |
+#    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-console-namespace-template.json
 
 - name: workload Tasks Complete
   debug:
