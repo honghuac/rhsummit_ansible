@@ -1,53 +1,60 @@
 ---
 become_override: false
-ocp_username: opentlc-mgr
+#ocp_username: opentlc-mgr
 
-ocp_user_needs_quota: True
+#ocp_user_needs_quota: True
 
-ocp_user_groups:
-  - OPENTLC-PROJECT-PROVISIONERS
+#ocp_user_groups:
+#  - OPENTLC-PROJECT-PROVISIONERS
 
-ocp_project: fuse-ignite-{{guid}}
+ocp_username: user1
+ocp_project: fuse-online
+openshift_oauth_proxy_imagestream: oauth-proxy-openshift4
+openshift_oauth_proxy_image: quay.io/openshift/origin-oauth-proxy:v4.0.0
+openshift_oauth_proxy_image_tag: latest
 
-quota_requests_cpu: 12
-quota_limits_cpu: 20
+fuse_online_oauth_proxy_dc_name: syndesis-oauthproxy
+fuse_online_oauth_proxy_container_name: syndesis-oauthproxy
 
-quota_requests_memory: '8Gi'
-quota_limits_memory: '30Gi'
+#quota_requests_cpu: 12
+#quota_limits_cpu: 20
 
-quota_configmaps: 20
-quota_pods: 30
-quota_persistentvolumeclaims: 20
-quota_services: 30
-quota_secrets: 90
-quota_requests_storage: 50Gi
+#quota_requests_memory: '8Gi'
+#quota_limits_memory: '30Gi'
 
-ocp_apps_domain: apps.{{subdomain_base}}
+#quota_configmaps: 20
+#quota_pods: 30
+#quota_persistentvolumeclaims: 20
+#quota_services: 30
+#quota_secrets: 90
+#quota_requests_storage: 50Gi
 
-build_status_retries: 20
-build_status_delay: 20
+#ocp_apps_domain: apps.{{subdomain_base}}
 
-deploy_status_retries: 25
-deploy_status_delay: 20
+#build_status_retries: 20
+#build_status_delay: 20
+
+#deploy_status_retries: 25
+#deploy_status_delay: 20
 
 # OCP Limit Range
-pod_min_mem: 10Mi
-pod_max_mem: 6Gi
-container_max_mem: 4Gi
-default_min_mem: 256Mi
-default_max_mem: 1Gi
-default_min_cpu: 250m
-default_max_cpu: 1000m
+#pod_min_mem: 10Mi
+#pod_max_mem: 6Gi
+#container_max_mem: 4Gi
+#default_min_mem: 256Mi
+#default_max_mem: 1Gi
+#default_min_cpu: 250m
+#default_max_cpu: 1000m
 
-POSTGRESQL_MEMORY_LIMIT: 512Mi
-PROMETHEUS_MEMORY_LIMIT: 255Mi
-META_MEMORY_LIMIT: 1Gi
-SERVER_MEMORY_LIMIT: 2Gi
-MAX_INTEGRATIONS_PER_USER: 25
+#POSTGRESQL_MEMORY_LIMIT: 512Mi
+#PROMETHEUS_MEMORY_LIMIT: 255Mi
+#META_MEMORY_LIMIT: 1Gi
+#SERVER_MEMORY_LIMIT: 2Gi
+#MAX_INTEGRATIONS_PER_USER: 25
 
 # userId / password for AMQ used in syndesisio
-mq_username: amq
-mq_password: topSecret
+#mq_username: amq
+#mq_password: topSecret
 
 
 

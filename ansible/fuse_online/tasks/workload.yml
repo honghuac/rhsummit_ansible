@@ -29,48 +29,46 @@
 - name: Grant ocp user with ability to install operator in that users Fuse Online project
   script: templates/install_ocp.sh --grant {{ocp_username}}
 
-
-
 # ######        Coolstore Catalog Service       ##########
 #
-- name: Ensure the following directory is refreshed in remote, /tmp/{{ocp_project}}
-  file:
-    path: "/tmp/{{ocp_project}}"
-    state: absent
-- file:
-    path: "/tmp/{{ocp_project}}"
-    state: directory
+#- name: Ensure the following directory is refreshed in remote, /tmp/{{ocp_project}}
+#  file:
+#    path: "/tmp/{{ocp_project}}"
+#    state: absent
+#- file:
+#    path: "/tmp/{{ocp_project}}"
+#    state: directory
 
 
-- name: Add the view role to the default service account
-  shell: "oc policy add-role-to-user view -z default -n {{ocp_project}}"
+#- name: Add the view role to the default service account
+#  shell: "oc policy add-role-to-user view -z default -n {{ocp_project}}"
 
-- name: Copy catalog service configmap to known path
-  template:
-    src: templates/app-config.yaml
-    dest: /tmp/{{ocp_project}}/app-config.yaml
-- name: Load catalog service configmap
-  shell: "oc create configmap app-config --from-file=/tmp/{{ocp_project}}/app-config.yaml -n {{ocp_project}}"
+#- name: Copy catalog service configmap to known path
+#  template:
+#    src: templates/app-config.yaml
+#    dest: /tmp/{{ocp_project}}/app-config.yaml
+#- name: Load catalog service configmap
+#  shell: "oc create configmap app-config --from-file=/tmp/{{ocp_project}}/app-config.yaml -n {{ocp_project}}"
 
 
-- name: Copy catalog service (with db) template to known path
-  template:
-    src: templates/coolstore-catalog-mongodb-persistent.yaml
-    dest: /tmp/{{ocp_project}}/coolstore-catalog-mongodb-persistent.yaml
-- name: Build and create catalog service
-  shell: |
-      oc new-app \
-      -f /tmp/{{ocp_project}}/coolstore-catalog-mongodb-persistent.yaml \
-      -p CATALOG_DB_USERNAME=mongo \
-      -p CATALOG_DB_PASSWORD=mongo \
-      -n {{ocp_project}}
-- name: resume catalog-service
-  shell: oc rollout resume dc/catalog-service -n {{ocp_project}}
-- include_tasks: ./wait_for_deploy.yml
-  static: no
-  vars:
-    pod_to_wait:
-      - catalog-service
+#- name: Copy catalog service (with db) template to known path
+#  template:
+#    src: templates/coolstore-catalog-mongodb-persistent.yaml
+#    dest: /tmp/{{ocp_project}}/coolstore-catalog-mongodb-persistent.yaml
+#- name: Build and create catalog service
+#  shell: |
+#      oc new-app \
+#      -f /tmp/{{ocp_project}}/coolstore-catalog-mongodb-persistent.yaml \
+#      -p CATALOG_DB_USERNAME=mongo \
+#      -p CATALOG_DB_PASSWORD=mongo \
+#      -n {{ocp_project}}
+#- name: resume catalog-service
+#  shell: oc rollout resume dc/catalog-service -n {{ocp_project}}
+#- include_tasks: ./wait_for_deploy.yml
+#  static: no
+#  vars:
+#    pod_to_wait:
+#      - catalog-service
 
 # ########################################################
 
@@ -79,15 +77,23 @@
 - name: Install Fuse Online
   script: templates/install_ocp.sh
 
+- name: Create Opensift 4 ImageStream
+  shell: oc import-image {{openshift_oauth_proxy_imagestream}} --from={{openshift_oauth_proxy_image}} --confirm
 
-- name: Scale up broker-amq
-  shell: |
-      oc scale dc/broker-amq --replicas=1 -n {{ocp_project}}
-- include_tasks: ./wait_for_deploy.yml
-  static: no
-  vars:
-    pod_to_wait:
-      - broker-amq
+- name: Import ImageStream
+  shell: oc import-image {{openshift_oauth_proxy_imagestream}}:{{openshift_oauth_proxy_image_tag}}
+
+- name: Update OAuth Proxy Image
+  shell: oc set triggers dc/{{fuse_online_oauth_proxy_dc_name}} --from-image={{ocp_project}}/{{openshift_oauth_proxy_imagestream}}:{{openshift_oauth_proxy_image_tag}} -c  {{fuse_online_oauth_proxy_container_name}}
+
+#- name: Scale up broker-amq
+#  shell: |
+#      oc scale dc/broker-amq --replicas=1 -n {{ocp_project}}
+#- include_tasks: ./wait_for_deploy.yml
+#  static: no
+#  vars:
+#    pod_to_wait:
+#      - broker-amq
 
 # ########################################################
 
