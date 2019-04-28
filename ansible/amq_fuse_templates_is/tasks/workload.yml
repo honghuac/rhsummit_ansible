@@ -1,19 +1,16 @@
 ---
-- name: Change to openshift project
-  shell: "oc project openshift"
 
 - name: Update the AMQ Broker on OpenShift Container Platform image stream in OCP cluster
-  shell: "oc replace --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/72-1.1.GA/amq-broker-7-image-streams.yaml"
+  shell: "oc replace -n {{ imagestreams_templates_namespace }} --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/72-1.1.GA/amq-broker-7-image-streams.yaml"
 
 - name: Update the AMQ Broker on OpenShift Container Platform Scaledown Controller image stream in OCP cluster
-  shell: "oc replace --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/72-1.1.GA/amq-broker-7-scaledown-controller-image-streams.yaml"
+  shell: "oc replace -n {{ imagestreams_templates_namespace }} --force -f https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/72-1.1.GA/amq-broker-7-scaledown-controller-image-streams.yaml"
 
 - name: Import AMQ Broker on OpenShift Container Platform image into OCP cluster
-  shell: "oc import-image amq-broker-72-openshift:1.1"
+  shell: "oc -n {{ imagestreams_templates_namespace }} import-image amq-broker-72-openshift:1.1"
 
 - name: Import AMQ Broker on OpenShift Container Platform Scaledown Controller image into OCP cluster
-  shell: "oc import-image amq-broker-72-scaledown-controller-openshift:1.0"
-#  shell: "oc import-image amq-broker-72-scaledown-controller-openshift:latest"
+  shell: "oc -n {{ imagestreams_templates_namespace }} import-image amq-broker-72-scaledown-controller-openshift:1.0"
 
 - name: Update AMQ Broker on OpenShift Container Platform templates in OCP cluster
   shell: |
@@ -25,46 +22,9 @@
     amq-broker-72-persistence-clustered.yaml \
     amq-broker-72-persistence-clustered-ssl.yaml;
      do
-     oc replace --force -f \
+     oc -n {{ imagestreams_templates_namespace }} replace --force -f \
     https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/72-1.1.GA/templates/${template}
      done
-
-#- name: Create Fuse on OpenShift imagestream in OCP cluster
-#  shell: |
-#    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-image-streams.json
-
-#- name: Create Fuse on OpenShift quickstart templates in OCP cluster
-#  shell: |
-#    for template in eap-camel-amq-template.json \
-#     eap-camel-cdi-template.json \
-#     eap-camel-cxf-jaxrs-template.json \
-#     eap-camel-cxf-jaxws-template.json \
-#     eap-camel-jpa-template.json \
-#     karaf-camel-amq-template.json \
-#     karaf-camel-log-template.json \
-#    karaf-camel-rest-sql-template.json \
-#     karaf-cxf-rest-template.json \
-#     spring-boot-camel-amq-template.json \
-#     spring-boot-camel-config-template.json \
-#     spring-boot-camel-drools-template.json \
-#     spring-boot-camel-infinispan-template.json \
-#     spring-boot-camel-teiid-template.json \
-#     spring-boot-camel-template.json \
-#     spring-boot-camel-xml-template.json \
-#     spring-boot-cxf-jaxrs-template.json \
-#     spring-boot-cxf-jaxws-template.json ;
-#       do
-#       oc replace -n openshift -f \
-#       https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/quickstarts/${template}
-#       done
-
-#- name: Create Fuse on OpenShift Hawtio Cluster template in OCP cluster
-#  shell: |
-#    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-console-cluster-template.json
-
-#- name: Create Fuse on OpenShift Hawtio Namespace templates in OCP cluster
-#  shell: |
-#    oc replace -n openshift -f https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-000099-redhat-5/fis-console-namespace-template.json
 
 - name: workload Tasks Complete
   debug:
