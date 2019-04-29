@@ -4,7 +4,7 @@ become_override: false
 ocp_user_groups:
   - OPENTLC-PROJECT-PROVISIONERS
 
-OCP_AMP_ADMIN_ID: api0
+OCP_AMP_ADMIN_ID: user1
 
 ocp_user_needs_quota: true
 
@@ -41,9 +41,11 @@ ocp_apps_domain: "apps.{{ subdomain_base }}"           # All other OCP environme
 
 
 lab_name: 3scale-mt
-API_MANAGER_NS: "{{lab_name}}-{{OCP_AMP_ADMIN_ID}}"
+API_MANAGER_NS: "3scale-amp"
 
-is_shared_cluster: false
+is_shared_cluster: true
+
+rwo_cluster: true
 
 # Use this for 3scale AMP on shared cluster
 threescale_template_shared: https://raw.githubusercontent.com/3scale/3scale-amp-openshift-templates/2.4.0.GA/amp/amp.yml

@@ -36,9 +36,10 @@
 - name: Enable 3scale Service Discovery
   shell: "oc adm policy add-cluster-role-to-user view system:serviceaccount:{{API_MANAGER_NS}}:default"
 
-- name: Command to enable the wildcard routes in the OCP cluster for 3scale
-  shell: "oc set env dc/router ROUTER_ALLOW_WILDCARD_ROUTES=true -n default"
-  ignore_errors: true
+# Router in OCP 4 does not allow wildcard routes
+#- name: Command to enable the wildcard routes in the OCP cluster for 3scale
+#  shell: "oc set env dc/router ROUTER_ALLOW_WILDCARD_ROUTES=true -n default"
+#  ignore_errors: true
 
 ################      Multitenant  AMP        #####################
 
@@ -55,17 +56,17 @@
     path: "{{work_dir}}"
     state: directory
 
-- name: Delete default limitrange
-  shell: |
-    oc delete limitrange {{API_MANAGER_NS}}-core-resource-limits -n {{API_MANAGER_NS}}
-  ignore_errors: true
+#- name: Delete default limitrange
+#  shell: |
+#    oc delete limitrange {{API_MANAGER_NS}}-core-resource-limits -n {{API_MANAGER_NS}}
+#  ignore_errors: true
 
-- name: Create a new limitrange
-  template:
-    src: templates/limitrange.yaml
-    dest: "{{work_dir}}/limitrange.yaml"
-- shell: |
-    oc create -f {{work_dir}}/limitrange.yaml -n {{API_MANAGER_NS}}
+#- name: Create a new limitrange
+#  template:
+#    src: templates/limitrange.yaml
+#    dest: "{{work_dir}}/limitrange.yaml"
+#- shell: |
+#    oc create -f {{work_dir}}/limitrange.yaml -n {{API_MANAGER_NS}}
 
 - name: "Download {{ threescale_template }}"
   get_url:
@@ -84,6 +85,11 @@
     - name: Reduce RAM resource limit on _redis_ databases
       command: sed -i 's/32Gi/6Gi/' "{{modified_template_path}}"
   when: is_shared_cluster|bool
+
+- block:
+    - name: Change access mode on RWX PVC
+      command: sed -i s/ReadWriteMany/ReadWriteOnce/' "{{modified_template_path}}"
+  when: rwo_cluster|bool
 
 - block:
     - name: Reduce RAM resource limit on _redis_ databases
