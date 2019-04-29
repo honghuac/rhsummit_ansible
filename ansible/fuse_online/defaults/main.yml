@@ -15,6 +15,11 @@ openshift_oauth_proxy_image_tag: latest
 
 fuse_online_oauth_proxy_dc_name: syndesis-oauthproxy
 fuse_online_oauth_proxy_container_name: syndesis-oauthproxy
+fuse_online_server_dc_name: syndesis-server
+fuse_online_server_container_name: syndesis-server
+custom_syndesis_server_application_name: syndesis-server-openshift4
+custom_syndesis_server_application_tag: latest
+
 
 #quota_requests_cpu: 12
 #quota_limits_cpu: 20

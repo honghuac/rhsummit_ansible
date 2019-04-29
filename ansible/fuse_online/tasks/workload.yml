@@ -97,6 +97,14 @@
 
 # ########################################################
 
+- name: Create custom build resources for syndesis server
+  shell: "oc process -p=APPLICATION_NAME={{custom_syndesis_server_application_name}} -p=BUILD_OUTPUT_TAG={{custom_syndesis_server_application_tag}} -f {{ role_path }}/files/fuse-ignite-server-openshift4-template.yml | oc -n {{ocp_project}} apply -f-"
+
+- name: Build custom syndesis server image
+  shell: "oc start-build -n {{ocp_project}} {{custom_syndesis_server_application_name}} --from-dir={{ role_path}}/files/fuse-ignite-server-openshift4 --wait"
+
+- name: Update syndesis server image
+  shell: oc set triggers dc/{{fuse_online_server_dc_name}} --from-image={{ocp_project}}/{{custom_syndesis_server_application_name}}:{{custom_syndesis_server_application_tag}} -c  {{fuse_online_server_container_name}}
 
 - name: Annotate the empty project as requested by user
   shell: "oc annotate namespace {{ocp_project}} openshift.io/requester={{ocp_username}} --overwrite"
