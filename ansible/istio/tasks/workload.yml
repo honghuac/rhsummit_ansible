@@ -1,0 +1,31 @@
+---
+
+- name: create istio projects
+  shell: "oc adm new-project {{ item }} --display-name={{ item }}"
+  loop:
+    - "{{ istio_system_project }}"
+    - "{{ istio_operator_project }}"
+
+- name: Create Istio Resources
+  shell: "oc create -f {{ istio_control_plane_resources }}"
+
+- name: Create Istio Control Plane CR
+  shell: "oc create -n {{ istio_system_project }} -f {{ role_path }}/files/controlplane.yml"
+
+- name: wait up to 5 minutes for istio operator pod to be ready
+  shell: "oc get deployment -n {{ istio_operator_project }} istio-operator -o jsonpath='{.status.readyReplicas}'"
+  register: istio_deployment_status
+  until: "istio_deployment_status.stdout | int >= 1"
+  retries: 5
+  delay: 60
+
+- name: wait up to 8 minutes for the elasticsearch statefulset to exist
+  shell: "oc get statefulset elasticsearch -n {{ istio_system_project }}"
+  register: elasticsearch_set_status
+  until: elasticsearch_set_status.rc == 0
+  retries: 8
+  delay: 60
+
+- name: workload Tasks Complete
+  debug:
+    msg: workload Tasks Complete
