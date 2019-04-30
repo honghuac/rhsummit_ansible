@@ -1,4 +1,6 @@
-= ocp-workload-fuse-ignite
+= amq_fuse_templates_is
+
+Installation of Fuse and AMQ templates and ImageStreams
 
 Login into a target OCP environment as a cluster admin.
 
