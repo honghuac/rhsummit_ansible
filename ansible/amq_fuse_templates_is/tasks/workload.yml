@@ -26,6 +26,15 @@
     https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/72-1.1.GA/templates/${template}
      done
 
+- name: Deploy AMQ Broker to Enterprise Services project
+  shell: "oc new-app -n {{ enterprise_services_project }} --template={{ amq_broker_template }} -p=AMQ_PROTOCOL={{ amq_broker_protocols }} -p=AMQ_USER={{ amq_broker_user }} -p=AMQ_PASSWORD={{ amq_broker_password }}"
+
+- name: Deploy PostgreSQL database to Enterprise Services project
+  shell: "oc new-app -n {{ enterprise_services_project }} -p POSTGRESQL_USER={{ postgresql_user }} -p POSTGRESQL_PASSWORD={{ postgresql_password }} -p POSTGRESQL_DATABASE={{ postgresql_database }} {{ postgresql_template }}"
+
+- name: Deploy PostgreSQL Seed job
+  shell: "oc process -f {{ role_path }}/files/postgresql-seed.yaml | oc apply -n {{ enterprise_services_project }} -f-"
+
 - name: workload Tasks Complete
   debug:
     msg: workload Tasks Complete
